@@ -1,3 +1,3 @@
-# SpringBatch 3 + SpringBoot
+# SpringBatch 3 + SpringBoot 1.5
 
-Old SpringBatch Fwk with SpringBoot
+SpringBatch with SpringBoot
