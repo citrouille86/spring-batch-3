@@ -12,10 +12,10 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
-import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.FlatFileItemWriter;
+import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
+import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
@@ -54,7 +54,7 @@ public class BatchConfiguration {
 
     @Bean
     public ItemReader<Student> jdbcReader() {
-        JdbcCursorItemReader<Student> reader = new JdbcCursorItemReader<>();
+        final JdbcCursorItemReader<Student> reader = new JdbcCursorItemReader<>();
         reader.setDataSource(dataSource);
         reader.setSql("select * from student where subMarkOne % 2 = 0");
         reader.setRowMapper(
@@ -64,45 +64,45 @@ public class BatchConfiguration {
 
     @Bean
     public ItemReader<Student> fileReader() {
-        FlatFileItemReader<Student> reader = new FlatFileItemReader<Student>();
-        reader.setResource(new ClassPathResource("data.csv"));
-        reader.setLineMapper(new DefaultLineMapper<Student>() {
-            {
-                setLineTokenizer(new DelimitedLineTokenizer() {
+        return new FlatFileItemReaderBuilder<Student>()
+                .resource(new ClassPathResource("data.csv"))
+                .lineMapper(new DefaultLineMapper<Student>() {
                     {
-                        setNames(new String[] { "stdId", "subMarkOne", "subMarkTwo" });
+                        setLineTokenizer(new DelimitedLineTokenizer() {
+                            {
+                                setNames("stdId", "subMarkOne", "subMarkTwo");
+                            }
+                        });
+                        setFieldSetMapper(new BeanWrapperFieldSetMapper<Student>() {
+                            {
+                                setTargetType(Student.class);
+                            }
+                        });
                     }
-                });
-                setFieldSetMapper(new BeanWrapperFieldSetMapper<Student>() {
-                    {
-                        setTargetType(Student.class);
-                    }
-                });
-            }
-        });
-        return reader;
+                }).build();
     }
 
     @Bean
     public ItemWriter<Marksheet> jdbcWriter() {
-        JdbcBatchItemWriter<Marksheet> writer = new JdbcBatchItemWriter<>();
-        writer.setDataSource(dataSource);
-        writer.setSql("INSERT INTO marksheet (stdId, totalSubMark) VALUES (:stdId, :totalSubMark)");
-        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
-        return writer;
+        return new JdbcBatchItemWriterBuilder<Marksheet>()
+                .dataSource(dataSource)
+                .sql("INSERT INTO marksheet (stdId, totalSubMark) VALUES (:stdId, :totalSubMark)")
+                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+                .build();
     }
 
     @Bean
     public ItemWriter<Marksheet> fileWriter() {
-        FlatFileItemWriter<Marksheet> writer = new FlatFileItemWriter<Marksheet>();
-        writer.setResource(new ClassPathResource("output.csv"));
-        DelimitedLineAggregator<Marksheet> delLineAgg = new DelimitedLineAggregator<Marksheet>();
+        final DelimitedLineAggregator<Marksheet> delLineAgg = new DelimitedLineAggregator<Marksheet>();
         delLineAgg.setDelimiter(",");
-        BeanWrapperFieldExtractor<Marksheet> fieldExtractor = new BeanWrapperFieldExtractor<Marksheet>();
+        final BeanWrapperFieldExtractor<Marksheet> fieldExtractor = new BeanWrapperFieldExtractor<Marksheet>();
         fieldExtractor.setNames(new String[] { "stdId", "totalSubMark" });
         delLineAgg.setFieldExtractor(fieldExtractor);
-        writer.setLineAggregator(delLineAgg);
-        return writer;
+
+        return new FlatFileItemWriterBuilder<Marksheet>()
+                .resource(new ClassPathResource("output.csv"))
+                .lineAggregator(delLineAgg)
+                .build();
     }
 
     @Bean
