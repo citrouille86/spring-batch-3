@@ -65,7 +65,8 @@ public class BatchConfiguration {
     @Bean
     public ItemReader<Student> fileReader() {
         return new FlatFileItemReaderBuilder<Student>()
-                .resource(new ClassPathResource("data.csv"))
+                .name("ReadStudent")
+        		.resource(new ClassPathResource("data.csv"))
                 .lineMapper(new DefaultLineMapper<Student>() {
                     {
                         setLineTokenizer(new DelimitedLineTokenizer() {
@@ -100,6 +101,7 @@ public class BatchConfiguration {
         delLineAgg.setFieldExtractor(fieldExtractor);
 
         return new FlatFileItemWriterBuilder<Marksheet>()
+                .name("WriteMarksheet")
                 .resource(new ClassPathResource("output.csv"))
                 .lineAggregator(delLineAgg)
                 .build();
