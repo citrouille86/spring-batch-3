@@ -1,4 +1,4 @@
-package fr.hm.demo.dto;
+package fr.nchantreau.dto;
 
 public class Student {
     private String stdId;

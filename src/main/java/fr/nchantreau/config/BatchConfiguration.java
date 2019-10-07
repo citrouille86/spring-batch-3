@@ -1,4 +1,4 @@
-package fr.hm.demo.config;
+package fr.nchantreau.config;
 
 import javax.sql.DataSource;
 
@@ -26,12 +26,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
-import fr.hm.demo.dto.Marksheet;
-import fr.hm.demo.dto.Student;
-import fr.hm.demo.listener.JobCompletionNotificationListener;
-import fr.hm.demo.listener.MarksheetWriterListener;
-import fr.hm.demo.listener.StepCompletionNotificationListener;
-import fr.hm.demo.processor.StudentItemProcessor;
+import fr.nchantreau.dto.Marksheet;
+import fr.nchantreau.dto.Student;
+import fr.nchantreau.listener.JobCompletionNotificationListener;
+import fr.nchantreau.listener.MarksheetWriterListener;
+import fr.nchantreau.listener.StepCompletionNotificationListener;
+import fr.nchantreau.processor.StudentItemProcessor;
 
 @Configuration
 @EnableBatchProcessing

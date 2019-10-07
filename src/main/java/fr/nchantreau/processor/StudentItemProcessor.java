@@ -1,11 +1,11 @@
-package fr.hm.demo.processor;
+package fr.nchantreau.processor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 
-import fr.hm.demo.dto.Marksheet;
-import fr.hm.demo.dto.Student;
+import fr.nchantreau.dto.Marksheet;
+import fr.nchantreau.dto.Student;
 
 public class StudentItemProcessor implements ItemProcessor<Student, Marksheet> {
 

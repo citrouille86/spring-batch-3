@@ -1,4 +1,4 @@
-package fr.hm.demo.listener;
+package fr.nchantreau.listener;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ItemWriteListener;
 import org.springframework.stereotype.Component;
 
-import fr.hm.demo.dto.Marksheet;
+import fr.nchantreau.dto.Marksheet;
 
 @Component
 public class MarksheetWriterListener implements ItemWriteListener<Marksheet> {

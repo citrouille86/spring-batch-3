@@ -1,4 +1,4 @@
-package fr.hm.demo.listener;
+package fr.nchantreau.listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
