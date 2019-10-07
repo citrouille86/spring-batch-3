@@ -52,7 +52,7 @@ public class BatchConfiguration {
     @Autowired
     public StepCompletionNotificationListener stepListener;
 
-    @Bean
+    @Bean(destroyMethod = "") // To avoid org.springframework.batch.item.ItemStreamException, disable destroy method inference for a particular @Bean
     public ItemReader<Student> jdbcReader() {
         final JdbcCursorItemReader<Student> reader = new JdbcCursorItemReader<>();
         reader.setDataSource(dataSource);
